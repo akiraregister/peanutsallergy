@@ -23,8 +23,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   // API calls always go to network
-  if (e.request.url.includes('anthropic.com')) return;
-
+if (e.request.url.includes('anthropic.com') || e.request.url.includes('/api/')) return;
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
