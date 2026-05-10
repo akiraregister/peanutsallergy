@@ -237,12 +237,21 @@ function rmPrev(type){
 
 function imgf(file,type){
   if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    showPreview(type,e.target.result);
-    aiImg(type,e.target.result.split(',')[1]);
+  var canvas=document.createElement('canvas');
+  var ctx=canvas.getContext('2d');
+  var img=new Image();
+  img.onload=function(){
+    var max=1200;
+    var w=img.width,h=img.height;
+    if(w>max){h=Math.round(h*max/w);w=max;}
+    if(h>max){w=Math.round(w*max/h);h=max;}
+    canvas.width=w;canvas.height=h;
+    ctx.drawImage(img,0,0,w,h);
+    var compressed=canvas.toDataURL('image/jpeg',0.8);
+    showPreview(type,compressed);
+    aiImg(type,compressed.split(',')[1]);
   };
-  reader.readAsDataURL(file);
+  img.src=URL.createObjectURL(file);
 }
 
 async function api(sys,usr,img){
@@ -271,7 +280,7 @@ async function chk(){
     localStorage.setItem('ph',JSON.stringify(hist));
     showHist();
   }catch(e){
-    el.innerHTML='<div class="rc warning"><p class="rbody">確認できませんでした。再試行してください。</p></div>';
+    el.innerHTML='<div class="rc warning"><p class="rbody">エラー: '+e.message+'</p></div>';
   }
   btn.disabled=false;btn.innerHTML='<i class="ti ti-shield-check"></i>確認';
 }
@@ -301,7 +310,7 @@ async function aiImg(type,b64){
     var r=await api(c.sys,c.usr,b64);
     if(type==='menu')showMR(el,r);else showIR(el,r,type);
   }catch(e){
-    el.innerHTML='<div class="rc warning"><p class="rbody">解析できませんでした。再試行してください。</p></div>';
+    el.innerHTML='<div class="rc warning"><p class="rbody">エラー: '+e.message+'</p></div>';
   }
 }
 
