@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>ピーナッツチェッカー</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#D97706"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="ピーナッツ"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --amber:#D97706;--amber-d:#B45309;--amber-l:#FEF3C7;--amber-b:#FCD34D;
+  --bg:#fff;--bg2:#F9F9F8;--bg3:#F3F2EE;
+  --t1:#1A1A18;--t2:#6B6B67;--t3:#A8A8A4;
+  --b1:rgba(0,0,0,.4);--b2:rgba(0,0,0,.3);--b3:rgba(0,0,0,.15);
+  --rm:8px;--rl:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1C1C1E;--bg2:#2C2C2E;--bg3:#3A3A3C;
+  --t1:#F5F5F0;--t2:#AEAEAD;--t3:#6C6C6A;
+  --b1:rgba(255,255,255,.4);--b2:rgba(255,255,255,.3);--b3:rgba(255,255,255,.15);
+  --amber-l:#3D2C06;
+}}
+html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica Neue',sans-serif}
+.shell{max-width:430px;margin:0 auto;min-height:100%;background:var(--bg);display:flex;flex-direction:column}
+.hdr{padding:env(safe-area-inset-top,44px) 16px 12px;background:var(--bg);border-bottom:.5px solid var(--b3);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--amber-l);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hdr-t h1{font-size:16px;font-weight:600;color:var(--t1)}
+.hdr-t p{font-size:11px;color:var(--t2);margin-top:1px}
+.lpill{margin-left:auto;font-size:10px;background:var(--amber-l);color:#92400E;padding:3px 8px;border-radius:999px;font-weight:600;flex-shrink:0}
+.tabs{display:flex;background:var(--bg);border-bottom:.5px solid var(--b3);overflow-x:auto;scrollbar-width:none;padding:0 4px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;flex:1;padding:10px 8px;font-size:12px;font-weight:500;color:var(--t2);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-.5px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent;transition:color .15s}
+.tab.on{color:var(--amber);border-bottom-color:var(--amber)}
+.tab i{font-size:15px}
+.scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.panel{padding:16px;display:none}
+.panel.on{display:block}
+.irow{display:flex;gap:8px;margin-bottom:12px}
+.irow input{flex:1;font-size:16px;padding:10px 12px;border:.5px solid var(--b2);border-radius:var(--rm);background:var(--bg);color:var(--t1);outline:none;-webkit-appearance:none}
+.irow input:focus{border-color:var(--amber)}
+.irow input::placeholder{color:var(--t3);font-size:13px}
+.btn{padding:10px 14px;font-size:13px;font-weight:600;background:var(--amber);color:#fff;border:none;border-radius:var(--rm);cursor:pointer;display:flex;align-items:center;gap:5px;-webkit-tap-highlight-color:transparent;transition:background .15s;flex-shrink:0}
+.btn:active{background:var(--amber-d);transform:scale(.97)}
+.btn:disabled{background:var(--bg3);color:var(--t2);transform:none}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.chip{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--bg2);color:var(--t2);border:.5px solid var(--b3)}
+.ucard{border:1.5px dashed var(--b2);border-radius:var(--rl);padding:24px 16px;text-align:center;background:var(--bg2);position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s}
+.ucard:active{border-color:var(--amber);background:var(--amber-l)}
+.ucard input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;font-size:0}
+.ucard .ui{font-size:28px;color:var(--amber);margin-bottom:6px}
+.ucard .ut{font-size:14px;font-weight:500;color:var(--t1)}
+.ucard .us{font-size:12px;color:var(--t2);margin-top:4px}
+.prevw{position:relative;margin-bottom:12px}
+.prevw img{width:100%;border-radius:var(--rm);max-height:240px;object-fit:cover;display:block;border:.5px solid var(--b3)}
+.prevw button{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.mpills{display:flex;gap:6px;margin-bottom:10px}
+.mpill{flex:1;padding:7px 10px;font-size:12px;border-radius:999px;border:.5px solid var(--b2);background:var(--bg);color:var(--t2);cursor:pointer;text-align:center;font-weight:500;transition:all .15s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:4px}
+.mpill.on{background:var(--amber-l);border-color:var(--amber-b);color:#92400E}
+.mpill i{font-size:13px}
+.rc{border-radius:var(--rl);padding:14px 16px;margin-bottom:12px;border:.5px solid;animation:su .25s ease}
+@keyframes su{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.rc.danger{background:#FEF2F2;border-color:#FECACA}
+.rc.warning{background:#FFFBEB;border-color:#FDE68A}
+.rc.safe{background:#F0FDF4;border-color:#BBF7D0}
+.rc.loading{background:var(--bg2);border-color:var(--b3)}
+.vb{font-size:15px;font-weight:600;text-align:center;padding:10px;border-radius:var(--rm);margin-bottom:10px}
+.vb.danger{color:#DC2626;background:rgba(239,68,68,.1)}
+.vb.warning{color:#D97706;background:rgba(245,158,11,.1)}
+.vb.safe{color:#16A34A;background:rgba(34,197,94,.1)}
+.rmeta{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.rbadge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px}
+.rbadge.danger{background:#FCA5A5;color:#7F1D1D}
+.rbadge.warning{background:#FCD34D;color:#78350F}
+.rbadge.safe{background:#86EFAC;color:#14532D}
+.rfood{font-size:14px;font-weight:500;color:var(--t1)}
+.rlang{font-size:10px;color:var(--t3);padding:2px 6px;background:var(--bg2);border-radius:4px}
+.rbody{font-size:13px;color:var(--t2);line-height:1.65}
+.dsec{margin-top:10px;padding-top:10px;border-top:.5px solid var(--b3)}
+.dsec h4{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.dsec ul{padding-left:16px}
+.dsec li{font-size:12px;color:var(--t2);margin-bottom:3px;line-height:1.5}
+.mtag{font-family:monospace;font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:4px;color:var(--t1)}
+.mig{display:flex;flex-direction:column;gap:6px}
+.mir{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--rm);border:.5px solid var(--b3);background:var(--bg)}
+.mist{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px}
+.mist.danger{background:#FCA5A5}.mist.warning{background:#FCD34D}.mist.safe{background:#86EFAC}
+.mii .nm{font-size:13px;font-weight:500;color:var(--t1)}
+.mii .nj{font-size:11px;color:var(--t2)}
+.mii .rs{font-size:11px;color:var(--t2);margin-top:2px}
+.recb{margin-top:8px;padding:8px 10px;background:var(--bg2);border-radius:var(--rm);font-size:12px;color:var(--t2);line-height:1.5;display:flex;gap:6px;align-items:flex-start}
+.recb i{color:var(--amber);font-size:14px;margin-top:1px;flex-shrink:0}
+.hwrap{margin-top:20px}
+.slbl{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.hi{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--rm);border:.5px solid var(--b3);background:var(--bg);margin-bottom:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .1s}
+.hi:active{background:var(--bg2)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.danger{background:#EF4444}.dot.warning{background:#F59E0B}.dot.safe{background:#22C55E}
+.hn{flex:1;font-size:13px;color:var(--t1)}
+.hm{font-size:10px;color:var(--t3)}
+.disc{margin-top:10px;padding:8px 12px;background:var(--bg2);border-radius:var(--rm);border-left:2px solid var(--amber);font-size:11px;color:var(--t2);line-height:1.55}
+.bsafe{height:env(safe-area-inset-bottom,20px)}
+.spin{animation:sp .8s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="hdr">
+    <div class="logo">🛡️</div>
+    <div class="hdr-t">
+      <h1>ピーナッツチェッカー</h1>
+      <p>多言語対応 · ラベル · メニュー · 料理</p>
+    </div>
+    <div class="lpill">🌍 多言語</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="sw('text')" id="t-text"><i class="ti ti-search"></i>食品名</button>
+    <button class="tab" onclick="sw('label')" id="t-label"><i class="ti ti-barcode"></i>ラベル</button>
+    <button class="tab" onclick="sw('menu')" id="t-menu"><i class="ti ti-menu-2"></i>メニュー</button>
+    <button class="tab" onclick="sw('dish')" id="t-dish"><i class="ti ti-bowl"></i>料理</button>
+  </div>
+
+  <div class="scrl">
+    <div class="panel on" id="p-text">
+      <div class="chips">
+        <span class="chip">🇯🇵 日本語</span><span class="chip">🇨🇳 中文</span>
+        <span class="chip">🇺🇸 English</span><span class="chip">🇰🇷 한국어</span><span class="chip">+ 自動検出</span>
+      </div>
+      <div class="irow">
+        <input type="text" id="fi" placeholder="例: 麻婆豆腐 / Satay / 땅콩과자..." onkeydown="if(event.key==='Enter')chk()"/>
+        <button class="btn" onclick="chk()" id="cb"><i class="ti ti-shield-check"></i>確認</button>
+      </div>
+      <div id="tr"></div>
+      <div id="th"></div>
+    </div>
+
+    <div class="panel" id="p-label">
+      <div class="chips">
+        <span class="chip">🇯🇵</span><span class="chip">🇨🇳</span><span class="chip">🇺🇸</span>
+        <span class="chip">🇰🇷</span><span class="chip">🇫🇷</span><span class="chip">🇩🇪</span>
+        <span class="chip">🇹🇭</span><span class="chip">🇸🇦</span><span class="chip">+ 自動検出</span>
+      </div>
+      <div id="label-ua">
+        <div class="ucard">
+          <input type="file" accept="image/*" capture="environment" onchange="imgf(this.files[0],'label')"/>
+          <div class="ui"><i class="ti ti-barcode"></i></div>
+          <div class="ut">原材料表示をスキャン</div>
+          <div class="us">あらゆる言語の食品ラベルに対応</div>
+        </div>
+      </div>
+      <div id="lr"></div>
+    </div>
+
+    <div class="panel" id="p-menu">
+      <div class="mpills">
+        <button class="mpill on" id="pf" onclick="smm('full')"><i class="ti ti-layout"></i>メニュー全体</button>
+        <button class="mpill" id="pi" onclick="smm('item')"><i class="ti ti-list-search"></i>料理を指定</button>
+      </div>
+      <div id="mi-in" style="display:none;margin-bottom:10px">
+        <input type="text" id="mi" style="width:100%;font-size:14px;padding:10px 12px;border:.5px solid var(--b2);border-radius:var(--rm);background:var(--bg);color:var(--t1);outline:none;-webkit-appearance:none" placeholder="気になる料理名（オプション）"/>
+      </div>
+      <div id="menu-ua">
+        <div class="ucard">
+          <input type="file" accept="image/*" capture="environment" onchange="imgf(this.files[0],'menu')"/>
+          <div class="ui"><i class="ti ti-menu-2"></i></div>
+          <div class="ut">メニューを撮影</div>
+          <div class="us">中国語・英語・日本語・韓国語等対応</div>
+        </div>
+      </div>
+      <div id="mr"></div>
+    </div>
+
+    <div class="panel" id="p-dish">
+      <div id="dish-ua">
+        <div class="ucard">
+          <input type="file" accept="image/*" capture="environment" onchange="imgf(this.files[0],'dish')"/>
+          <div class="ui"><i class="ti ti-bowl"></i></div>
+          <div class="ut">料理の写真をスキャン</div>
+          <div class="us">見た目からピーナッツ含有を推定</div>
+        </div>
+      </div>
+      <div id="dr"></div>
+    </div>
+
+    <div class="bsafe"></div>
+  </div>
+</div>
+
+<script>
+var mm='full';
+var hist=JSON.parse(localStorage.getItem('ph')||'[]');
+
+function sw(t){
+  ['text','label','menu','dish'].forEach(function(x){
+    document.getElementById('t-'+x).classList.toggle('on',x===t);
+    document.getElementById('p-'+x).classList.toggle('on',x===t);
+  });
+}
+
+function smm(m){
+  mm=m;
+  document.getElementById('pf').classList.toggle('on',m==='full');
+  document.getElementById('pi').classList.toggle('on',m==='item');
+  document.getElementById('mi-in').style.display=m==='item'?'block':'none';
+}
+
+function ld(el,msg){
+  el.innerHTML='<div class="rc loading"><div style="display:flex;align-items:center;gap:10px"><span class="spin"><i class="ti ti-loader" style="font-size:20px;color:var(--amber)"></i></span><span style="font-size:13px;color:var(--t2)">'+msg+'</span></div></div>';
+}
+
+function si(s){return s==='danger'?'🚫':s==='warning'?'⚠️':'✅';}
+function bl(s){return s==='danger'?'危険！':s==='warning'?'要注意':'安全';}
+
+function showPreview(type,src){
+  var areaId=type+'-ua';
+  var area=document.getElementById(areaId);
+  var card=area.querySelector('.ucard');
+  card.style.display='none';
+  var pw=document.getElementById(type+'-pw');
+  if(!pw){pw=document.createElement('div');pw.id=type+'-pw';pw.className='prevw';area.parentNode.insertBefore(pw,area.nextSibling);}
+  pw.innerHTML='<img src="'+src+'"/><button onclick="rmPrev(\''+type+'\')"><i class="ti ti-x" style="font-size:12px"></i></button>';
+}
+
+function rmPrev(type){
+  var pw=document.getElementById(type+'-pw');
+  if(pw)pw.remove();
+  document.getElementById(type+'-ua').querySelector('.ucard').style.display='';
+  document.getElementById(type==='label'?'lr':type==='menu'?'mr':'dr').innerHTML='';
+}
+
+function imgf(file,type){
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    showPreview(type,e.target.result);
+    aiImg(type,e.target.result.split(',')[1]);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function api(sys,usr,img){
+  var body={model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:[{role:'user',content:img?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:img}},{type:'text',text:usr}]:[{type:'text',text:usr}]}]};
+  var res=await fetch('/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!res.ok)throw new Error('API '+res.status);
+  var d=await res.json();
+  var txt=d.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('').replace(/```json|```/g,'').trim();
+  return JSON.parse(txt);
+}
+
+async function chk(){
+  var food=document.getElementById('fi').value.trim();
+  if(!food)return;
+  var btn=document.getElementById('cb');
+  var el=document.getElementById('tr');
+  btn.disabled=true;btn.innerHTML='<span class="spin"><i class="ti ti-loader"></i></span>';
+  ld(el,'「'+food+'」を確認中...');
+  try{
+    var r=await api(
+      'あなたはピーナッツアレルギー専門AIです。あらゆる言語の食品名を受け取りピーナッツ含有を判定します。JSONのみ返答：{"food":"食品名","detectedLang":"言語","status":"danger|warning|safe","verdictText":"判定（10字以内）","summary":"2文日本語説明","details":["詳細"]}',
+      'ピーナッツ含有確認：「'+food+'」'
+    );
+    showTR(el,r);
+    hist.unshift(r);if(hist.length>6)hist.pop();
+    localStorage.setItem('ph',JSON.stringify(hist));
+    showHist();
+  }catch(e){
+    el.innerHTML='<div class="rc warning"><p class="rbody">確認できませんでした。再試行してください。</p></div>';
+  }
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-shield-check"></i>確認';
+}
+
+async function aiImg(type,b64){
+  var el=document.getElementById(type==='label'?'lr':type==='menu'?'mr':'dr');
+  var cfgs={
+    label:{
+      sys:'多言語食品ラベル解析AI。JSONのみ：{"food":"商品名","detectedLang":"言語","status":"danger|warning|safe","verdictText":"判定10字","summary":"日本語2文","details":["詳細"],"allergenTerms":["検出語句"]}',
+      usr:'原材料表示を解析してピーナッツ含有を確認してください。',
+      ld:'原材料表示を多言語解析中...'
+    },
+    menu:{
+      sys:'レストランメニュー解析AI。JSONのみ：{"menuType":"料理ジャンル","detectedLang":"言語","overallRisk":"danger|warning|safe","summary":"2文","items":[{"name":"料理名原文","nameJp":"和訳","status":"danger|warning|safe","reason":"1文"}]}',
+      usr:mm==='item'&&document.getElementById('mi').value?'メニューを解析し「'+document.getElementById('mi').value+'」を重点チェックしてください。':'メニュー全料理のピーナッツリスクを評価してください。',
+      ld:'メニューを解析中...'
+    },
+    dish:{
+      sys:'料理視覚解析AI。JSONのみ：{"dishName":"料理名推定","cuisine":"ジャンル","status":"danger|warning|safe","verdictText":"判定10字","summary":"視覚的分析2文","visualClues":["確認要素"],"recommendation":"推奨アクション1文"}',
+      usr:'この料理にピーナッツが含まれているか視覚的に判定してください。',
+      ld:'料理を視覚解析中...'
+    }
+  };
+  var c=cfgs[type];
+  ld(el,c.ld);
+  try{
+    var r=await api(c.sys,c.usr,b64);
+    if(type==='menu')showMR(el,r);else showIR(el,r,type);
+  }catch(e){
+    el.innerHTML='<div class="rc warning"><p class="rbody">解析できませんでした。再試行してください。</p></div>';
+  }
+}
+
+function showTR(el,r){
+  el.innerHTML='<div class="rc '+r.status+'"><div class="vb '+r.status+'">'+si(r.status)+' '+(r.verdictText||bl(r.status))+'</div><div class="rmeta"><span class="rbadge '+r.status+'">'+bl(r.status)+'</span><span class="rfood">'+r.food+'</span>'+(r.detectedLang?'<span class="rlang">'+r.detectedLang+'</span>':'')+'</div><p class="rbody">'+r.summary+'</p>'+(r.details&&r.details.length?'<div class="dsec"><ul>'+r.details.map(function(d){return'<li>'+d+'</li>';}).join('')+'</ul></div>':'')+'</div><div class="disc"><strong>注意：</strong>重篤なアレルギーの場合は必ず原材料表示を直接ご確認ください。</div>';
+}
+
+function showIR(el,r,type){
+  var ex=type==='dish'
+    ?(r.visualClues&&r.visualClues.length?'<div class="dsec"><h4>視覚的確認事項</h4><ul>'+r.visualClues.map(function(c){return'<li>'+c+'</li>';}).join('')+'</ul></div>':'')+(r.recommendation?'<div class="recb"><i class="ti ti-baby-carriage"></i>'+r.recommendation+'</div>':'')
+    :(r.allergenTerms&&r.allergenTerms.length?'<div class="dsec"><h4>検出アレルゲン表記</h4><ul>'+r.allergenTerms.map(function(t){return'<li><span class="mtag">'+t+'</span></li>';}).join('')+'</ul></div>':'')+(r.details&&r.details.length?'<div class="dsec"><ul>'+r.details.map(function(d){return'<li>'+d+'</li>';}).join('')+'</ul></div>':'');
+  el.innerHTML='<div class="rc '+r.status+'"><div class="vb '+r.status+'">'+si(r.status)+' '+(r.verdictText||bl(r.status))+'</div><div class="rmeta"><span class="rbadge '+r.status+'">'+bl(r.status)+'</span><span class="rfood">'+(r.dishName||r.food||'')+'</span>'+(r.detectedLang?'<span class="rlang">'+r.detectedLang+'</span>':'')+(r.cuisine?'<span class="rlang">'+r.cuisine+'</span>':'')+'</div><p class="rbody">'+r.summary+'</p>'+ex+'</div><div class="disc"><strong>注意：</strong>'+(type==='dish'?'視覚解析は補助情報です。スタッフへの確認を推奨します。':'重篤なアレルギーの場合は原材料表示を直接ご確認ください。')+'</div>';
+}
+
+function showMR(el,r){
+  var s=r.overallRisk;
+  var sorted=(r.items||[]).slice().sort(function(a,b){return['danger','warning','safe'].indexOf(a.status)-['danger','warning','safe'].indexOf(b.status);});
+  el.innerHTML='<div class="rc '+s+'"><div class="vb '+s+'">'+si(s)+' '+(s==='danger'?'危険な料理あり':s==='warning'?'注意が必要':'安全なメニュー')+'</div><div class="rmeta"><span class="rbadge '+s+'">'+bl(s)+'</span><span class="rfood">'+(r.menuType||'メニュー')+'</span>'+(r.detectedLang?'<span class="rlang">'+r.detectedLang+'</span>':'')+'</div><p class="rbody">'+r.summary+'</p>'+(sorted.length?'<div class="dsec"><h4>料理別リスク判定</h4><div class="mig">'+sorted.map(function(item){return'<div class="mir"><div class="mist '+item.status+'">'+si(item.status)+'</div><div class="mii"><div class="nm">'+item.name+(item.nameJp&&item.nameJp!==item.name?' <span style="font-size:11px;color:var(--t2)">/ '+item.nameJp+'</span>':'')+'</div><div class="rs">'+item.reason+'</div></div></div>';}).join('')+'</div></div>':'')+'</div><div class="disc"><strong>注意：</strong>同じ料理でも調理法により成分が異なります。スタッフへの確認を推奨します。</div>';
+}
+
+function showHist(){
+  var el=document.getElementById('th');
+  if(!hist.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="hwrap"><div class="slbl">最近の検索</div>'+hist.map(function(h,i){return'<div class="hi" onclick="reH('+i+')"><div class="dot '+h.status+'"></div><span class="hn">'+h.food+'</span><span class="hm">'+(h.status==='danger'?'危険':h.status==='warning'?'注意':'安全')+'</span></div>';}).join('')+'</div>';
+}
+
+function reH(i){
+  showTR(document.getElementById('tr'),hist[i]);
+  document.getElementById('fi').value=hist[i].food;
+}
+
+showHist();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');</script>
+</body>
+</html>
