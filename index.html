@@ -255,7 +255,7 @@ function imgf(file,type){
 }
 
 async function api(sys,usr,img){
-  var body={model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:[{role:'user',content:img?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:img}},{type:'text',text:usr}]:[{type:'text',text:usr}]}]};
+  var body={model:'claude-sonnet-4-6',max_tokens:1200,system:sys,messages:[{role:'user',content:img?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:img}},{type:'text',text:usr}]:[{type:'text',text:usr}]}]};
   var res=await fetch('/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!res.ok)throw new Error('API '+res.status);
   var d=await res.json();
@@ -344,6 +344,15 @@ function reH(i){
 
 showHist();
 </script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');</script>
+<script>
+if('serviceWorker' in navigator){
+  // Unregister all old service workers first, then register fresh
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    Promise.all(regs.map(function(r){return r.unregister();})).then(function(){
+      navigator.serviceWorker.register('sw.js?v=2');
+    });
+  });
+}
+</script>
 </body>
 </html>
