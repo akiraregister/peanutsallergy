@@ -21,6 +21,9 @@ export default async function handler(req) {
 
   try {
     const body = await req.json();
+    // Force correct model name
+    body.model = 'claude-sonnet-4-6';
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -30,9 +33,19 @@ export default async function handler(req) {
       },
       body: JSON.stringify(body)
     });
+
     const data = await response.json();
+
+    // If Anthropic returned an error, pass it through with details
+    if (!response.ok) {
+      return new Response(JSON.stringify({ error: 'Anthropic error: ' + JSON.stringify(data) }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
     return new Response(JSON.stringify(data), {
-      status: response.status,
+      status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (e) {
