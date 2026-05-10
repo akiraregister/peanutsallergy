@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ピーナッツチェッカー</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#D97706" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ピーナッツ" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --amber: #D97706;
+      --amber-dark: #B45309;
+      --amber-light: #FEF3C7;
+      --amber-border: #FCD34D;
+      --red-bg: #FEF2F2;
+      --red-border: #FECACA;
+      --red-badge: #FCA5A5;
+      --red-text: #7F1D1D;
+      --red-title: #DC2626;
+      --yellow-bg: #FFFBEB;
+      --yellow-border: #FDE68A;
+      --yellow-badge: #FCD34D;
+      --yellow-text: #78350F;
+      --yellow-title: #D97706;
+      --green-bg: #F0FDF4;
+      --green-border: #BBF7D0;
+      --green-badge: #86EFAC;
+      --green-text: #14532D;
+      --green-title: #16A34A;
+      --bg: #FFFFFF;
+      --bg2: #F9F9F8;
+      --bg3: #F3F2EE;
+      --text1: #1A1A18;
+      --text2: #6B6B67;
+      --text3: #A8A8A4;
+      --border1: rgba(0,0,0,0.4);
+      --border2: rgba(0,0,0,0.3);
+      --border3: rgba(0,0,0,0.15);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1C1C1E; --bg2: #2C2C2E; --bg3: #3A3A3C;
+        --text1: #F5F5F0; --text2: #AEAEAD; --text3: #6C6C6A;
+        --border1: rgba(255,255,255,0.4); --border2: rgba(255,255,255,0.3); --border3: rgba(255,255,255,0.15);
+        --amber-light: #3D2C06;
+        --red-bg: #2D1515; --yellow-bg: #2D2005; --green-bg: #0D2B15;
+        --red-border: #7F2020; --yellow-border: #7A5200; --green-border: #1A5C2A;
+        --red-title: #F87171; --yellow-title: #FBB F24; --green-title: #4ADE80;
+        --yellow-title: #FBBF24;
+      }
+    }
+
+    html, body { height: 100%; background: var(--bg3); font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+
+    .app-shell {
+      max-width: 430px; margin: 0 auto;
+      min-height: 100%; background: var(--bg);
+      display: flex; flex-direction: column;
+    }
+
+    /* Safe area for iPhone notch */
+    .header {
+      padding: env(safe-area-inset-top, 44px) 16px 12px;
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border3);
+      display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--amber-light); display: flex; align-items: center;
+      justify-content: center; font-size: 20px; flex-shrink: 0;
+    }
+    .header-text h1 { font-size: 16px; font-weight: 600; color: var(--text1); }
+    .header-text p { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .lang-pill {
+      margin-left: auto; font-size: 10px; background: var(--amber-light);
+      color: #92400E; padding: 3px 8px; border-radius: 999px; font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .tabs {
+      display: flex; background: var(--bg);
+      border-bottom: 0.5px solid var(--border3);
+      overflow-x: auto; scrollbar-width: none; padding: 0 4px;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0; flex: 1; padding: 10px 8px; font-size: 12px; font-weight: 500;
+      color: var(--text2); border: none; background: none;
+      border-bottom: 2px solid transparent; margin-bottom: -0.5px;
+      cursor: pointer; white-space: nowrap;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.15s;
+    }
+    .tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+    .tab i { font-size: 15px; }
+
+    .scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+    .panel { padding: 16px; display: none; }
+    .panel.active { display: block; }
+
+    .input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .input-row input {
+      flex: 1; font-size: 16px; padding: 10px 12px;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius-md); background: var(--bg);
+      color: var(--text1); outline: none;
+      -webkit-appearance: none;
+    }
+    .input-row input:focus { border-color: var(--amber); }
+    .input-row input::placeholder { color: var(--text3); font-size: 14px; }
+
+    .btn-primary {
+      padding: 10px 14px; font-size: 13px; font-weight: 600;
+      background: var(--amber); color: white; border: none;
+      border-radius: var(--radius-md); cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s; flex-shrink: 0;
+    }
+    .btn-primary:active { background: var(--amber-dark); transform: scale(0.97); }
+    .btn-primary:disabled { background: var(--bg3); color: var(--text2); transform: none; }
+
+    .lang-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+    .lang-chip {
+      font-size: 11px; padding: 3px 8px; border-radius: 999px;
+      background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border3);
+    }
+
+    .upload-card {
+      border: 1.5px dashed var(--border2); border-radius: var(--radius-lg);
+      padding: 24px 16px; text-align: center; background: var(--bg2);
+      position: relative; overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .upload-card:active { border-color: var(--amber); background: var(--amber-light); }
+    .upload-card input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%;
+      cursor: pointer; font-size: 0;
+    }
+    .upload-card .uc-icon { font-size: 32px; color: var(--amber); margin-bottom: 8px; }
+    .upload-card .uc-title { font-size: 14px; font-weight: 500; color: var(--text1); }
+    .upload-card .uc-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+    .preview-wrap { position: relative; margin-bottom: 12px; }
+    .preview-img {
+      width: 100%; border-radius: var(--radius-md);
+      max-height: 240px; object-fit: cover; display: block;
+      border: 0.5px solid var(--border3);
+    }
+    .preview-remove {
+      position: absolute; top: 8px; right: 8px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(0,0,0,0.55); color: white; border: none;
+      font-size: 13px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mode-pills { display: flex; gap: 6px; margin-bottom: 10px; }
+    .mode-pill {
+      flex: 1; padding: 7px 10px; font-size: 12px; border-radius: 999px;
+      border: 0.5px solid var(--border2); background: var(--bg);
+      color: var(--text2); cursor: pointer; text-align: center;
+      font-weight: 500; transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    .mode-pill.active { background: var(--amber-light); border-color: var(--amber-border); color: #92400E; }
+    .mode-pill i { font-size: 13px; }
+
+    .result-card {
+      border-radius: var(--radius-lg); padding: 14px 16px;
+      margin-bottom: 12px; border: 0.5px solid;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    .result-card.danger { background: var(--red-bg); border-color: var(--red-border); }
+    .result-card.warning { background: var(--yellow-bg); border-color: var(--yellow-border); }
+    .result-card.safe { background: var(--green-bg); border-color: var(--green-border); }
+    .result-card.loading { background: var(--bg2); border-color: var(--border3); }
+
+    .verdict-big {
+      font-size: 15px; font-weight: 600; text-align: center;
+      padding: 10px; border-radius: var(--radius-md); margin-bottom: 10px;
+    }
+    .verdict-big.danger { color: var(--red-title); background: rgba(239,68,68,0.1); }
+    .verdict-big.warning { color: var(--yellow-title); background: rgba(245,158,11,0.1); }
+    .verdict-big.safe { color: var(--green-title); background: rgba(34,197,94,0.1); }
+
+    .result-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+    .result-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; }
+    .result-badge.danger { background: var(--red-badge); color: var(--red-text); }
+    .result-badge.warning { background: var(--yellow-badge); color: var(--yellow-text); }
+    .result-badge.safe { background: var(--green-badge); color: var(--green-text); }
+    .result-food { font-size: 14px; font-weight: 500; color: var(--text1); }
+    .result-lang { font-size: 10px; color: var(--text3); padding: 2px 6px; background: var(--bg2); border-radius: 4px; }
+    .result-body { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+    .detail-section { margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border3); }
+    .detail-section h4 { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .detail-section ul { padding-left: 16px; }
+    .detail-section li { font-size: 12px; color: var(--text2); margin-bottom: 3px; line-height: 1.5; }
+    .mono-tag { font-family: monospace; font-size: 12px; background: var(--bg3); padding: 1px 5px; border-radius: 4px; color: var(--text1); }
+
+    .menu-items-grid { display: flex; flex-direction: column; gap: 6px; }
+    .menu-item-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px 10px; border-radius: var(--radius-md);
+      border: 0.5px solid var(--border3); background: var(--bg);
+    }
+    .msi { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+    .msi.danger { background: var(--red-badge); }
+    .msi.warning { background: var(--yellow-badge); }
+    .msi.safe { background: var(--green-badge); }
+    .menu-item-info .name { font-size: 13px; font-weight: 500; color: var(--text1); }
+    .menu-item-info .nameJp { font-size: 11px; color: var(--text2); }
+    .menu-item-info .reason { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+    .rec-box {
+      margin-top: 8px; padding: 8px 10px;
+      background: var(--bg2); border-radius: var(--radius-md);
+      font-size: 12px; color: var(--text2); line-height: 1.5;
+      display: flex; gap: 6px; align-items: flex-start;
+    }
+    .rec-box i { color: var(--amber); font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+
+    .history-wrap { margin-top: 20px; }
+    .section-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .history-item {
+      display: flex; align-items: center; gap: 8px; padding: 9px 10px;
+      border-radius: var(--radius-md); border: 0.5px solid var(--border3);
+      background: var(--bg); margin-bottom: 6px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.1s;
+    }
+    .history-item:active { background: var(--bg2); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot.danger { background: #EF4444; } .dot.warning { background: #F59E0B; } .dot.safe { background: #22C55E; }
+    .h-name { flex: 1; font-size: 13px; color: var(--text1); }
+    .h-meta { font-size: 10px; color: var(--text3); }
+
+    .disclaimer {
+      margin-top: 10px; padding: 8px 12px;
+      background: var(--bg2); border-radius: var(--radius-md);
+      border-left: 2px solid var(--amber);
+      font-size: 11px; color: var(--text2); line-height: 1.55;
+    }
+
+    .bottom-safe { height: env(safe-area-inset-bottom, 20px); }
+
+    .spinning { animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* API Key setup screen */
+    .setup-screen {
+      padding: 24px 16px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .setup-title { font-size: 16px; font-weight: 600; color: var(--text1); }
+    .setup-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+    .setup-screen input {
+      width: 100%; font-size: 14px; padding: 10px 12px;
+      border: 0.5px solid var(--border2); border-radius: var(--radius-md);
+      background: var(--bg); color: var(--text1); outline: none;
+      font-family: monospace; -webkit-appearance: none;
+    }
+    .setup-screen input:focus { border-color: var(--amber); }
+    .setup-link { font-size: 12px; color: var(--amber); }
+    .setup-note { font-size: 11px; color: var(--text3); line-height: 1.5; background: var(--bg2); padding: 8px 12px; border-radius: var(--radius-md); }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="header">
+    <div class="logo">🛡️</div>
+    <div class="header-text">
+      <h1>ピーナッツチェッカー</h1>
+      <p>多言語対応 · ラベル · メニュー · 料理</p>
+    </div>
+    <div class="lang-pill" id="lang-pill">🌍 多言語</div>
+  </div>
+
+  <!-- API Key setup -->
+  <div id="setup-screen" class="setup-screen" style="display:none;">
+    <p class="setup-title">🔑 Anthropic API Keyを設定</p>
+    <p class="setup-desc">このアプリはAnthropicのAIを使用します。<br/>APIキーを取得して以下に入力してください。</p>
+    <a class="setup-link" href="https://console.anthropic.com/settings/keys" target="_blank">
+      → console.anthropic.com でキーを取得
+    </a>
+    <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveApiKey()">
+      <i class="ti ti-key"></i>保存して開始
+    </button>
+    <p class="setup-note">⚠️ APIキーはこのデバイスのみに保存され、外部に送信されません。使用量はAnthropicコンソールで確認できます。</p>
+  </div>
+
+  <!-- Main app (hidden until API key set) -->
+  <div id="main-app" style="display:none; flex:1; display:none; flex-direction:column;">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('text')" id="tab-text"><i class="ti ti-search"></i>食品名</button>
+      <button class="tab" onclick="switchTab('label')" id="tab-label"><i class="ti ti-barcode"></i>ラベル</button>
+      <button class="tab" onclick="switchTab('menu')" id="tab-menu"><i class="ti ti-menu-2"></i>メニュー</button>
+      <button class="tab" onclick="switchTab('dish')" id="tab-dish"><i class="ti ti-bowl"></i>料理</button>
+    </div>
+
+    <div class="scroll-area">
+      <!-- 食品名タブ -->
+      <div class="panel active" id="panel-text">
+        <div class="lang-chips">
+          <span class="lang-chip">🇯🇵 日本語</span>
+          <span class="lang-chip">🇨🇳 中文</span>
+          <span class="lang-chip">🇺🇸 English</span>
+          <span class="lang-chip">🇰🇷 한국어</span>
+          <span class="lang-chip">+ 自動検出</span>
+        </div>
+        <div class="input-row">
+          <input type="text" id="food-input"
+            placeholder="例: 麻婆豆腐 / Satay / 땅콩과자..."
+            onkeydown="if(event.key==='Enter')checkFood()" />
+          <button class="btn-primary" onclick="checkFood()" id="check-btn">
+            <i class="ti ti-shield-check"></i>確認
+          </button>
+        </div>
+        <div id="text-result"></div>
+        <div id="text-history"></div>
+      </div>
+
+      <!-- ラベルタブ -->
+      <div class="panel" id="panel-label">
+        <div class="lang-chips">
+          <span class="lang-chip">🇯🇵</span><span class="lang-chip">🇨🇳</span>
+          <span class="lang-chip">🇺🇸</span><span class="lang-chip">🇰🇷</span>
+          <span class="lang-chip">🇫🇷</span><span class="lang-chip">🇩🇪</span>
+          <span class="lang-chip">🇹🇭</span><span class="lang-chip">🇸🇦</span>
+          <span class="lang-chip">+ 自動検出</span>
+        </div>
+        <div id="label-upload-area">
+          <div class="upload-card">
+            <input type="file" accept="image/*" capture="environment" onchange="handleImageFile(this.files[0],'label')" />
+            <div class="uc-icon"><i class="ti ti-barcode"></i></div>
+            <div class="uc-title">原材料表示をスキャン</div>
+            <div class="uc-sub">あらゆる言語の食品ラベルに対応</div>
+          </div>
+        </div>
+        <div id="label-result"></div>
+      </div>
+
+      <!-- メニュータブ -->
+      <div class="panel" id="panel-menu">
+        <div class="mode-pills">
+          <button class="mode-pill active" id="pill-full" onclick="setMenuMode('full')">
+            <i class="ti ti-layout"></i>メニュー全体
+          </button>
+          <button class="mode-pill" id="pill-item" onclick="setMenuMode('item')">
+            <i class="ti ti-list-search"></i>料理を指定
+          </button>
+        </div>
+        <div id="menu-item-input" style="display:none; margin-bottom:10px;">
+          <input type="text" id="menu-item-name"
+            style="width:100%; font-size:14px; padding:10px 12px; border:0.5px solid var(--border2); border-radius:var(--radius-md); background:var(--bg); color:var(--text1); outline:none; -webkit-appearance:none;"
+            placeholder="気になる料理名を入力（オプション）" />
+        </div>
+        <div id="menu-upload-area">
+          <div class="upload-card">
+            <input type="file" accept="image/*" capture="environment" onchange="handleImageFile(this.files[0],'menu')" />
+            <div class="uc-icon"><i class="ti ti-menu-2"></i></div>
+            <div class="uc-title">メニューを撮影</div>
+            <div class="uc-sub">中国語・英語・日本語・韓国語等対応</div>
+          </div>
+        </div>
+        <div id="menu-result"></div>
+      </div>
+
+      <!-- 料理タブ -->
+      <div class="panel" id="panel-dish">
+        <div id="dish-upload-area">
+          <div class="upload-card">
+            <input type="file" accept="image/*" capture="environment" onchange="handleImageFile(this.files[0],'dish')" />
+            <div class="uc-icon"><i class="ti ti-bowl"></i></div>
+            <div class="uc-title">料理の写真をスキャン</div>
+            <div class="uc-sub">見た目からピーナッツ含有を推定</div>
+          </div>
+        </div>
+        <div id="dish-result"></div>
+      </div>
+
+      <div class="bottom-safe"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── API Key 管理 ──────────────────────────────────────────
+  let API_KEY = localStorage.getItem('peanut_checker_api_key') || '';
+
+  function saveApiKey() {
+    const val = document.getElementById('api-key-input').value.trim();
+    if (!val.startsWith('sk-ant-')) {
+      alert('APIキーの形式が正しくありません（sk-ant-... で始まるもの）');
+      return;
+    }
+    API_KEY = val;
+    localStorage.setItem('peanut_checker_api_key', val);
+    showMain();
+  }
+
+  function showMain() {
+    document.getElementById('setup-screen').style.display = 'none';
+    const main = document.getElementById('main-app');
+    main.style.display = 'flex';
+    main.style.flexDirection = 'column';
+    main.style.flex = '1';
+  }
+
+  function init() {
+    if (API_KEY) showMain();
+    else document.getElementById('setup-screen').style.display = 'flex';
+  }
+  init();
+
+  // ── タブ切替 ──────────────────────────────────────────────
+  function switchTab(tab) {
+    ['text','label','menu','dish'].forEach(t => {
+      document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+      document.getElementById('panel-'+t).classList.toggle('active', t===tab);
+    });
+  }
+
+  // ── メニューモード ────────────────────────────────────────
+  let menuMode = 'full';
+  function setMenuMode(mode) {
+    menuMode = mode;
+    document.getElementById('pill-full').classList.toggle('active', mode==='full');
+    document.getElementById('pill-item').classList.toggle('active', mode==='item');
+    document.getElementById('menu-item-input').style.display = mode==='item' ? 'block' : 'none';
+  }
+
+  // ── UI ヘルパー ───────────────────────────────────────────
+  function showLoading(el, msg) {
+    el.innerHTML = `<div class="result-card loading"><div style="display:flex;align-items:center;gap:10px;"><span class="spinning"><i class="ti ti-loader" style="font-size:20px;color:var(--amber)"></i></span><span style="font-size:13px;color:var(--text2)">${msg}</span></div></div>`;
+  }
+  function si(s) { return s==='danger'?'🚫':s==='warning'?'⚠️':'✅'; }
+  function bl(s) { return s==='danger'?'危険！':s==='warning'?'要注意':'安全'; }
+
+  // ── プレビュー ────────────────────────────────────────────
+  let previewData = {};
+  function showPreview(type, src) {
+    previewData[type] = src;
+    const areaId = type+'-upload-area';
+    const area = document.getElementById(areaId);
+    const uploadCard = area.querySelector('.upload-card');
+    uploadCard.style.display = 'none';
+    let pw = document.getElementById(type+'-preview');
+    if (!pw) { pw = document.createElement('div'); pw.id = type+'-preview'; pw.className = 'preview-wrap'; area.appendChild(pw); }
+    pw.innerHTML = `<img src="${src}" class="preview-img" /><button class="preview-remove" onclick="removePreview('${type}')"><i class="ti ti-x" style="font-size:12px"></i></button>`;
+  }
+  function removePreview(type) {
+    const area = document.getElementById(type+'-upload-area');
+    area.querySelector('.upload-card').style.display = '';
+    const pw = document.getElementById(type+'-preview');
+    if (pw) pw.remove();
+    document.getElementById(type+'-result').innerHTML = '';
+    delete previewData[type];
+  }
+
+  // ── ファイル読み込み ──────────────────────────────────────
+  function handleImageFile(file, type) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      showPreview(type, e.target.result);
+      analyzeImage(type, e.target.result.split(',')[1]);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Anthropic API 呼び出し ────────────────────────────────
+  async function callClaude(system, userMsg, imageB64) {
+    const content = [];
+    if (imageB64) content.push({ type:'image', source:{ type:'base64', media_type:'image/jpeg', data: imageB64 }});
+    content.push({ type:'text', text: userMsg });
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'x-api-key': API_KEY, 'anthropic-version':'2023-06-01' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1200, system, messages:[{ role:'user', content }] })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (res.status === 401) { localStorage.removeItem('peanut_checker_api_key'); API_KEY=''; init(); throw new Error('API Key invalid'); }
+      throw new Error(err.error?.message || 'API error');
+    }
+    const data = await res.json();
+    return data.content.filter(b=>b.type==='text').map(b=>b.text).join('').replace(/```json|```/g,'').trim();
+  }
+
+  // ── 食品名チェック ────────────────────────────────────────
+  let searchHistory = JSON.parse(localStorage.getItem('peanut_history') || '[]');
+
+  async function checkFood() {
+    const food = document.getElementById('food-input').value.trim();
+    if (!food) return;
+    const btn = document.getElementById('check-btn');
+    const resultDiv = document.getElementById('text-result');
+    btn.disabled = true; btn.innerHTML = '<span class="spinning"><i class="ti ti-loader"></i></span>';
+    showLoading(resultDiv, `「${food}」を確認中...`);
+    try {
+      const raw = await callClaude(
+        `あなたはピーナッツアレルギー専門の食品安全AIです。あらゆる言語の食品名を受け取りピーナッツ含有を判定します。
+JSONのみ返答（前後の説明不要）：
+{"food":"食品名","detectedLang":"検出言語","status":"danger|warning|safe","verdictText":"判定（10字以内）","summary":"2文の日本語説明","details":["詳細1","詳細2"]}
+danger=含有確認 warning=混入リスク/不明 safe=安全`,
+        `ピーナッツ含有確認：「${food}」`
+      );
+      const r = JSON.parse(raw);
+      renderTextResult(resultDiv, r);
+      searchHistory.unshift({ ...r, time: Date.now() });
+      if (searchHistory.length > 8) searchHistory.pop();
+      localStorage.setItem('peanut_history', JSON.stringify(searchHistory));
+      renderHistory();
+    } catch(e) {
+      resultDiv.innerHTML = `<div class="result-card warning"><p class="result-body">確認できませんでした。もう一度お試しください。</p></div>`;
+    }
+    btn.disabled = false; btn.innerHTML = '<i class="ti ti-shield-check"></i>確認';
+  }
+
+  // ── 画像解析 ─────────────────────────────────────────────
+  async function analyzeImage(type, b64) {
+    const resultDiv = document.getElementById(type+'-result');
+    const configs = {
+      label: {
+        sys: `多言語食品ラベル解析AI。あらゆる言語の原材料表示からピーナッツを検出。
+JSONのみ返答：{"food":"商品名","detectedLang":"検出言語","status":"danger|warning|safe","verdictText":"判定（10字）","summary":"日本語2文","details":["詳細"],"allergenTerms":["検出語句"]}`,
+        user: '原材料表示を解析してピーナッツ含有を確認してください。',
+        loading: '原材料表示を多言語解析中...'
+      },
+      menu: {
+        sys: `レストランメニュー解析AI。あらゆる言語のメニューからピーナッツリスクを特定。
+JSONのみ返答：{"menuType":"料理ジャンル","detectedLang":"言語","overallRisk":"danger|warning|safe","summary":"2文","items":[{"name":"料理名（原文）","nameJp":"和訳","status":"danger|warning|safe","reason":"1文"}]}`,
+        user: menuMode==='item' && document.getElementById('menu-item-name').value
+          ? `メニューを解析し「${document.getElementById('menu-item-name').value}」を重点チェックしてください。`
+          : 'メニュー全料理のピーナッツリスクを評価してください。',
+        loading: 'メニューを解析中...'
+      },
+      dish: {
+        sys: `料理視覚解析AI。写真からピーナッツ含有を判定。
+JSONのみ返答：{"dishName":"料理名（推定）","cuisine":"ジャンル","status":"danger|warning|safe","verdictText":"判定（10字）","summary":"視覚的分析2文","visualClues":["確認要素"],"recommendation":"娘への推奨アクション（1文）"}`,
+        user: 'この料理にピーナッツが含まれているか視覚的に判定してください。',
+        loading: '料理を視覚解析中...'
+      }
+    };
+    const c = configs[type];
+    showLoading(resultDiv, c.loading);
+    try {
+      const raw = await callClaude(c.sys, c.user, b64);
+      const r = JSON.parse(raw);
+      if (type === 'menu') renderMenuResult(resultDiv, r);
+      else renderImageResult(resultDiv, r, type);
+    } catch(e) {
+      resultDiv.innerHTML = `<div class="result-card warning"><p class="result-body">解析できませんでした。画像を確認して再試行してください。</p></div>`;
+    }
+  }
+
+  // ── 結果描画 ──────────────────────────────────────────────
+  function renderTextResult(el, r) {
+    el.innerHTML = `
+      <div class="result-card ${r.status}">
+        <div class="verdict-big ${r.status}">${si(r.status)} ${r.verdictText||bl(r.status)}</div>
+        <div class="result-meta">
+          <span class="result-badge ${r.status}">${bl(r.status)}</span>
+          <span class="result-food">${r.food}</span>
+          ${r.detectedLang?`<span class="result-lang">${r.detectedLang}</span>`:''}
+        </div>
+        <p class="result-body">${r.summary}</p>
+        ${r.details?.length?`<div class="detail-section"><ul>${r.details.map(d=>`<li>${d}</li>`).join('')}</ul></div>`:''}
+      </div>
+      <div class="disclaimer"><strong>注意：</strong>重篤なアレルギーがある場合は必ず原材料表示を直接ご確認ください。</div>`;
+  }
+
+  function renderImageResult(el, r, type) {
+    const extras = type==='dish'
+      ? `${r.visualClues?.length?`<div class="detail-section"><h4>視覚的確認事項</h4><ul>${r.visualClues.map(c=>`<li>${c}</li>`).join('')}</ul></div>`:''} ${r.recommendation?`<div class="rec-box"><i class="ti ti-baby-carriage"></i>${r.recommendation}</div>`:''}`
+      : `${r.allergenTerms?.length?`<div class="detail-section"><h4>検出アレルゲン表記</h4><ul>${r.allergenTerms.map(t=>`<li><span class="mono-tag">${t}</span></li>`).join('')}</ul></div>`:''} ${r.details?.length?`<div class="detail-section"><ul>${r.details.map(d=>`<li>${d}</li>`).join('')}</ul></div>`:''}`;
+    el.innerHTML = `
+      <div class="result-card ${r.status}">
+        <div class="verdict-big ${r.status}">${si(r.status)} ${r.verdictText||bl(r.status)}</div>
+        <div class="result-meta">
+          <span class="result-badge ${r.status}">${bl(r.status)}</span>
+          <span class="result-food">${r.dishName||r.food||''}</span>
+          ${r.detectedLang?`<span class="result-lang">${r.detectedLang}</span>`:''}
+          ${r.cuisine?`<span class="result-lang">${r.cuisine}</span>`:''}
+        </div>
+        <p class="result-body">${r.summary}</p>${extras}
+      </div>
+      <div class="disclaimer"><strong>注意：</strong>${type==='dish'?'視覚解析は補助情報です。スタッフへの確認を推奨します。':'重篤なアレルギーがある場合は原材料表示を直接ご確認ください。'}</div>`;
+  }
+
+  function renderMenuResult(el, r) {
+    const s = r.overallRisk;
+    const sorted = [...(r.items||[])].sort((a,b)=>['danger','warning','safe'].indexOf(a.status)-['danger','warning','safe'].indexOf(b.status));
+    el.innerHTML = `
+      <div class="result-card ${s}">
+        <div class="verdict-big ${s}">${si(s)} ${s==='danger'?'危険な料理あり':s==='warning'?'注意が必要':'安全なメニュー'}</div>
+        <div class="result-meta">
+          <span class="result-badge ${s}">${bl(s)}</span>
+          <span class="result-food">${r.menuType||'メニュー'}</span>
+          ${r.detectedLang?`<span class="result-lang">${r.detectedLang}</span>`:''}
+        </div>
+        <p class="result-body">${r.summary}</p>
+        ${sorted.length?`<div class="detail-section"><h4>料理別リスク判定</h4><div class="menu-items-grid">${sorted.map(item=>`
+          <div class="menu-item-row">
+            <div class="msi ${item.status}">${si(item.status)}</div>
+            <div class="menu-item-info">
+              <div class="name">${item.name}</div>
+              ${item.nameJp && item.nameJp!==item.name?`<div class="nameJp">${item.nameJp}</div>`:''}
+              <div class="reason">${item.reason}</div>
+            </div>
+          </div>`).join('')}</div></div>`:''}
+      </div>
+      <div class="disclaimer"><strong>注意：</strong>同じ料理でも調理法により成分が異なります。スタッフへの確認を推奨します。</div>`;
+  }
+
+  // ── 履歴 ─────────────────────────────────────────────────
+  function renderHistory() {
+    const el = document.getElementById('text-history');
+    if (!searchHistory.length) { el.innerHTML=''; return; }
+    el.innerHTML = `<div class="history-wrap"><div class="section-label">最近の検索</div>${searchHistory.slice(0,6).map((h,i)=>`
+      <div class="history-item" onclick="reloadHistory(${i})">
+        <div class="dot ${h.status}"></div>
+        <span class="h-name">${h.food}</span>
+        <span class="h-meta">${h.status==='danger'?'危険':h.status==='warning'?'注意':'安全'}</span>
+      </div>`).join('')}</div>`;
+  }
+  function reloadHistory(i) {
+    renderTextResult(document.getElementById('text-result'), searchHistory[i]);
+    document.getElementById('food-input').value = searchHistory[i].food;
+  }
+  renderHistory();
+</script>
+
+<!-- Service Worker 登録 -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+</body>
+</html>
