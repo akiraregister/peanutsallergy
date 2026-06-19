@@ -29,18 +29,21 @@
 html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica Neue',sans-serif}
 .shell{max-width:430px;margin:0 auto;min-height:100%;background:var(--bg);display:flex;flex-direction:column}
 .hdr{padding:env(safe-area-inset-top,44px) 16px 12px;background:var(--bg);border-bottom:.5px solid var(--b3);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
-.logo{width:40px;height:40px;border-radius:12px;background:var(--amber-l);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.logo{width:40px;height:40px;border-radius:12px;overflow:hidden;flex-shrink:0}
+.logo img{width:100%;height:100%}
 .hdr-t h1{font-size:16px;font-weight:600;color:var(--t1)}
 .hdr-t p{font-size:11px;color:var(--t2);margin-top:1px}
 .lpill{margin-left:auto;font-size:10px;background:var(--amber-l);color:#92400E;padding:3px 8px;border-radius:999px;font-weight:600;flex-shrink:0}
 .tabs{display:flex;background:var(--bg);border-bottom:.5px solid var(--b3);overflow-x:auto;scrollbar-width:none;padding:0 4px}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;flex:1;padding:10px 8px;font-size:12px;font-weight:500;color:var(--t2);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-.5px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent;transition:color .15s}
+.tab{flex-shrink:0;flex:1;padding:10px 6px;font-size:11px;font-weight:500;color:var(--t2);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-.5px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:3px;-webkit-tap-highlight-color:transparent;transition:color .15s}
 .tab.on{color:var(--amber);border-bottom-color:var(--amber)}
-.tab i{font-size:15px}
+.tab i{font-size:14px}
 .scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .panel{padding:16px;display:none}
 .panel.on{display:block}
+
+/* Inputs */
 .irow{display:flex;gap:8px;margin-bottom:12px}
 .irow input{flex:1;font-size:16px;padding:10px 12px;border:.5px solid var(--b2);border-radius:var(--rm);background:var(--bg);color:var(--t1);outline:none;-webkit-appearance:none}
 .irow input:focus{border-color:var(--amber)}
@@ -48,21 +51,31 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
 .btn{padding:10px 14px;font-size:13px;font-weight:600;background:var(--amber);color:#fff;border:none;border-radius:var(--rm);cursor:pointer;display:flex;align-items:center;gap:5px;-webkit-tap-highlight-color:transparent;transition:background .15s;flex-shrink:0}
 .btn:active{background:var(--amber-d);transform:scale(.97)}
 .btn:disabled{background:var(--bg3);color:var(--t2);transform:none}
+.btn-sm{padding:7px 12px;font-size:12px;font-weight:600;border:none;border-radius:var(--rm);cursor:pointer;display:inline-flex;align-items:center;gap:4px;-webkit-tap-highlight-color:transparent}
+.btn-outline{background:transparent;border:.5px solid var(--b2);color:var(--t2)}
 .chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
 .chip{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--bg2);color:var(--t2);border:.5px solid var(--b3)}
+
+/* Upload */
 .ucard{border:1.5px dashed var(--b2);border-radius:var(--rl);padding:24px 16px;text-align:center;background:var(--bg2);position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s}
 .ucard:active{border-color:var(--amber);background:var(--amber-l)}
 .ucard input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;font-size:0}
 .ucard .ui{font-size:28px;color:var(--amber);margin-bottom:6px}
 .ucard .ut{font-size:14px;font-weight:500;color:var(--t1)}
 .ucard .us{font-size:12px;color:var(--t2);margin-top:4px}
+
+/* Preview */
 .prevw{position:relative;margin-bottom:12px}
-.prevw img{width:100%;border-radius:var(--rm);max-height:240px;object-fit:cover;display:block;border:.5px solid var(--b3)}
-.prevw button{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.prevw img{width:100%;border-radius:var(--rm);max-height:200px;object-fit:cover;display:block;border:.5px solid var(--b3)}
+.prevw button{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Menu mode pills */
 .mpills{display:flex;gap:6px;margin-bottom:10px}
 .mpill{flex:1;padding:7px 10px;font-size:12px;border-radius:999px;border:.5px solid var(--b2);background:var(--bg);color:var(--t2);cursor:pointer;text-align:center;font-weight:500;transition:all .15s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:4px}
 .mpill.on{background:var(--amber-l);border-color:var(--amber-b);color:#92400E}
 .mpill i{font-size:13px}
+
+/* Result cards */
 .rc{border-radius:var(--rl);padding:14px 16px;margin-bottom:12px;border:.5px solid;animation:su .25s ease}
 @keyframes su{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .rc.danger{background:#FEF2F2;border-color:#FECACA}
@@ -95,15 +108,79 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
 .mii .rs{font-size:11px;color:var(--t2);margin-top:2px}
 .recb{margin-top:8px;padding:8px 10px;background:var(--bg2);border-radius:var(--rm);font-size:12px;color:var(--t2);line-height:1.5;display:flex;gap:6px;align-items:flex-start}
 .recb i{color:var(--amber);font-size:14px;margin-top:1px;flex-shrink:0}
+.disc{margin-top:10px;padding:8px 12px;background:var(--bg2);border-radius:var(--rm);border-left:2px solid var(--amber);font-size:11px;color:var(--t2);line-height:1.55}
+
+/* Save sheet */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:none;align-items:flex-end}
+.sheet-overlay.show{display:flex}
+.sheet{background:var(--bg);border-radius:20px 20px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,16px) + 20px);width:100%;max-height:85vh;overflow-y:auto;animation:slideUp2 .3s ease}
+@keyframes slideUp2{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;background:var(--b3);border-radius:2px;margin:0 auto 16px}
+.sheet h3{font-size:16px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.sheet .sh-sub{font-size:12px;color:var(--t2);margin-bottom:16px}
+.field{margin-bottom:12px}
+.field label{font-size:12px;font-weight:500;color:var(--t2);display:block;margin-bottom:5px}
+.field input,.field textarea{width:100%;font-size:14px;padding:9px 12px;border:.5px solid var(--b2);border-radius:var(--rm);background:var(--bg);color:var(--t1);outline:none;-webkit-appearance:none;font-family:inherit}
+.field input:focus,.field textarea:focus{border-color:var(--amber)}
+.field textarea{resize:none;height:64px;line-height:1.5}
+.sheet-btns{display:flex;gap:8px;margin-top:4px}
+.sheet-btns button{flex:1;padding:12px;font-size:14px;font-weight:600;border-radius:var(--rm);border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn-save{background:var(--amber);color:white}
+.btn-skip{background:var(--bg3);color:var(--t2)}
+
+/* History tab */
+.hist-toolbar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+.hist-search{flex:1;font-size:14px;padding:8px 12px;border:.5px solid var(--b2);border-radius:var(--rm);background:var(--bg);color:var(--t1);outline:none;-webkit-appearance:none}
+.hist-search:focus{border-color:var(--amber)}
+.hist-search::placeholder{color:var(--t3)}
+.filter-pills{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.filter-pills::-webkit-scrollbar{display:none}
+.fpill{flex-shrink:0;padding:5px 12px;font-size:12px;border-radius:999px;border:.5px solid var(--b3);background:var(--bg);color:var(--t2);cursor:pointer;font-weight:500;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.fpill.on{font-weight:600}
+.fpill.all.on{background:var(--bg3);border-color:var(--b2);color:var(--t1)}
+.fpill.danger.on{background:#FEF2F2;border-color:#FECACA;color:#DC2626}
+.fpill.warning.on{background:#FFFBEB;border-color:#FDE68A;color:#D97706}
+.fpill.safe.on{background:#F0FDF4;border-color:#BBF7D0;color:#16A34A}
+.hist-count{font-size:11px;color:var(--t3);margin-bottom:10px}
+.hcard{display:flex;gap:10px;padding:10px 12px;border-radius:var(--rl);border:.5px solid var(--b3);background:var(--bg);margin-bottom:8px;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;transition:background .1s}
+.hcard:active{background:var(--bg2)}
+.hcard.danger{border-left:3px solid #EF4444}
+.hcard.warning{border-left:3px solid #F59E0B}
+.hcard.safe{border-left:3px solid #22C55E}
+.hthumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+.hthumb-ph{width:48px;height:48px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hinfo{flex:1;min-width:0}
+.hname{font-size:13px;font-weight:500;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.hmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hbadge{font-size:10px;font-weight:600;padding:2px 6px;border-radius:999px}
+.hbadge.danger{background:#FCA5A5;color:#7F1D1D}
+.hbadge.warning{background:#FCD34D;color:#78350F}
+.hbadge.safe{background:#86EFAC;color:#14532D}
+.hdate{font-size:11px;color:var(--t3)}
+.hloc{font-size:11px;color:var(--t2);display:flex;align-items:center;gap:2px}
+.hloc i{font-size:11px}
+.htype{font-size:10px;color:var(--t3);background:var(--bg2);padding:1px 5px;border-radius:3px}
+.hdel{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--bg3);border:none;color:var(--t3);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.empty-state{text-align:center;padding:48px 20px;color:var(--t3)}
+.empty-state i{font-size:40px;margin-bottom:12px;display:block}
+.empty-state p{font-size:13px;line-height:1.6}
+.export-row{display:flex;justify-content:flex-end;margin-bottom:8px}
+
+/* Detail sheet */
+.detail-sheet .ds-img{width:100%;border-radius:var(--rm);max-height:180px;object-fit:cover;margin-bottom:12px}
+.detail-sheet .ds-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:8px;font-size:13px}
+.detail-sheet .ds-label{font-size:11px;font-weight:500;color:var(--t3);width:52px;flex-shrink:0;padding-top:1px}
+.detail-sheet .ds-val{color:var(--t1);line-height:1.5}
+
+/* Quick history in scan tabs */
 .hwrap{margin-top:20px}
 .slbl{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.hi{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--rm);border:.5px solid var(--b3);background:var(--bg);margin-bottom:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .1s}
+.hi{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--rm);border:.5px solid var(--b3);background:var(--bg);margin-bottom:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .hi:active{background:var(--bg2)}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .dot.danger{background:#EF4444}.dot.warning{background:#F59E0B}.dot.safe{background:#22C55E}
 .hn{flex:1;font-size:13px;color:var(--t1)}
 .hm{font-size:10px;color:var(--t3)}
-.disc{margin-top:10px;padding:8px 12px;background:var(--bg2);border-radius:var(--rm);border-left:2px solid var(--amber);font-size:11px;color:var(--t2);line-height:1.55}
 .bsafe{height:env(safe-area-inset-bottom,20px)}
 .spin{animation:sp .8s linear infinite;display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -112,7 +189,7 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
 <body>
 <div class="shell">
   <div class="hdr">
-    <div class="logo">🛡️</div>
+    <div class="logo"><img src="icons/icon-192.png" alt=""/></div>
     <div class="hdr-t">
       <h1>ピーナッツチェッカー</h1>
       <p>多言語対応 · ラベル · メニュー · 料理</p>
@@ -125,13 +202,15 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
     <button class="tab" onclick="sw('label')" id="t-label"><i class="ti ti-barcode"></i>ラベル</button>
     <button class="tab" onclick="sw('menu')" id="t-menu"><i class="ti ti-menu-2"></i>メニュー</button>
     <button class="tab" onclick="sw('dish')" id="t-dish"><i class="ti ti-bowl"></i>料理</button>
+    <button class="tab" onclick="sw('hist')" id="t-hist"><i class="ti ti-history"></i>履歴</button>
   </div>
 
   <div class="scrl">
+    <!-- 食品名 -->
     <div class="panel on" id="p-text">
       <div class="chips">
         <span class="chip">🇯🇵 日本語</span><span class="chip">🇨🇳 中文</span>
-        <span class="chip">🇺🇸 English</span><span class="chip">🇰🇷 한국어</span><span class="chip">+ 自動検出</span>
+        <span class="chip">🇺🇸 English</span><span class="chip">🇰🇷 한국어</span><span class="chip">+ 自動</span>
       </div>
       <div class="irow">
         <input type="text" id="fi" placeholder="例: 麻婆豆腐 / Satay / 땅콩과자..." onkeydown="if(event.key==='Enter')chk()"/>
@@ -141,11 +220,12 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
       <div id="th"></div>
     </div>
 
+    <!-- ラベル -->
     <div class="panel" id="p-label">
       <div class="chips">
         <span class="chip">🇯🇵</span><span class="chip">🇨🇳</span><span class="chip">🇺🇸</span>
         <span class="chip">🇰🇷</span><span class="chip">🇫🇷</span><span class="chip">🇩🇪</span>
-        <span class="chip">🇹🇭</span><span class="chip">🇸🇦</span><span class="chip">+ 自動検出</span>
+        <span class="chip">🇹🇭</span><span class="chip">🇸🇦</span><span class="chip">+ 自動</span>
       </div>
       <div id="label-ua">
         <div class="ucard">
@@ -158,6 +238,7 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
       <div id="lr"></div>
     </div>
 
+    <!-- メニュー -->
     <div class="panel" id="p-menu">
       <div class="mpills">
         <button class="mpill on" id="pf" onclick="smm('full')"><i class="ti ti-layout"></i>メニュー全体</button>
@@ -177,6 +258,7 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
       <div id="mr"></div>
     </div>
 
+    <!-- 料理 -->
     <div class="panel" id="p-dish">
       <div id="dish-ua">
         <div class="ucard">
@@ -189,19 +271,67 @@ html,body{height:100%;background:var(--bg3);font-family:-apple-system,'Helvetica
       <div id="dr"></div>
     </div>
 
+    <!-- 履歴 -->
+    <div class="panel" id="p-hist">
+      <div class="hist-toolbar">
+        <input class="hist-search" type="text" placeholder="商品名・場所で検索..." oninput="renderHist()" id="hsearch"/>
+        <button class="btn-sm btn-outline" onclick="exportCSV()"><i class="ti ti-download" style="font-size:14px"></i></button>
+      </div>
+      <div class="filter-pills">
+        <button class="fpill all on" onclick="setFilter('all')" id="fp-all">すべて</button>
+        <button class="fpill danger" onclick="setFilter('danger')" id="fp-danger">🚫 危険</button>
+        <button class="fpill warning" onclick="setFilter('warning')" id="fp-warning">⚠️ 注意</button>
+        <button class="fpill safe" onclick="setFilter('safe')" id="fp-safe">✅ 安全</button>
+      </div>
+      <div id="hcount" class="hist-count"></div>
+      <div id="hlist"></div>
+      <div class="bsafe"></div>
+    </div>
+
     <div class="bsafe"></div>
   </div>
 </div>
 
+<!-- Save Sheet -->
+<div class="sheet-overlay" id="save-overlay" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3>記録に保存しますか？</h3>
+    <p class="sh-sub" id="sh-preview"></p>
+    <div class="field">
+      <label><i class="ti ti-map-pin" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>場所（任意）</label>
+      <input type="text" id="sh-loc" placeholder="例: City Super 古北 / Din Tai Fung..." autocomplete="off"/>
+    </div>
+    <div class="field">
+      <label><i class="ti ti-note" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>メモ（任意）</label>
+      <textarea id="sh-memo" placeholder="一言メモ..."></textarea>
+    </div>
+    <div class="sheet-btns">
+      <button class="btn-skip" onclick="closeSheet()">スキップ</button>
+      <button class="btn-save" onclick="saveRecord()"><i class="ti ti-bookmark" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Sheet -->
+<div class="sheet-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="sheet detail-sheet" id="detail-content"></div>
+</div>
+
 <script>
 var mm='full';
-var hist=JSON.parse(localStorage.getItem('ph')||'[]');
+var quickHist=JSON.parse(localStorage.getItem('ph')||'[]');
+var records=JSON.parse(localStorage.getItem('records')||'[]');
+var histFilter='all';
+var pendingRecord=null;
 
+// ── Tab switching ─────────────────────────────────────────
 function sw(t){
-  ['text','label','menu','dish'].forEach(function(x){
+  ['text','label','menu','dish','hist'].forEach(function(x){
     document.getElementById('t-'+x).classList.toggle('on',x===t);
     document.getElementById('p-'+x).classList.toggle('on',x===t);
   });
+  if(t==='hist') renderHist();
 }
 
 function smm(m){
@@ -211,30 +341,39 @@ function smm(m){
   document.getElementById('mi-in').style.display=m==='item'?'block':'none';
 }
 
+// ── Helpers ───────────────────────────────────────────────
 function ld(el,msg){
   el.innerHTML='<div class="rc loading"><div style="display:flex;align-items:center;gap:10px"><span class="spin"><i class="ti ti-loader" style="font-size:20px;color:var(--amber)"></i></span><span style="font-size:13px;color:var(--t2)">'+msg+'</span></div></div>';
 }
-
 function si(s){return s==='danger'?'🚫':s==='warning'?'⚠️':'✅';}
 function bl(s){return s==='danger'?'危険！':s==='warning'?'要注意':'安全';}
+function typeLabel(t){return t==='text'?'食品名':t==='label'?'ラベル':t==='menu'?'メニュー':'料理';}
+function typeIcon(t){return t==='text'?'ti-search':t==='label'?'ti-barcode':t==='menu'?'ti-menu-2':'ti-bowl';}
 
+function formatDate(ts){
+  var d=new Date(ts);
+  return (d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
+}
+
+// ── Preview ───────────────────────────────────────────────
+var previews={};
 function showPreview(type,src){
-  var areaId=type+'-ua';
-  var area=document.getElementById(areaId);
-  var card=area.querySelector('.ucard');
-  card.style.display='none';
+  var area=document.getElementById(type+'-ua');
+  area.querySelector('.ucard').style.display='none';
   var pw=document.getElementById(type+'-pw');
   if(!pw){pw=document.createElement('div');pw.id=type+'-pw';pw.className='prevw';area.parentNode.insertBefore(pw,area.nextSibling);}
   pw.innerHTML='<img src="'+src+'"/><button onclick="rmPrev(\''+type+'\')"><i class="ti ti-x" style="font-size:12px"></i></button>';
 }
-
 function rmPrev(type){
   var pw=document.getElementById(type+'-pw');
   if(pw)pw.remove();
   document.getElementById(type+'-ua').querySelector('.ucard').style.display='';
-  document.getElementById(type==='label'?'lr':type==='menu'?'mr':'dr').innerHTML='';
+  var el=document.getElementById(type==='label'?'lr':type==='menu'?'mr':'dr');
+  el.innerHTML='';
+  delete previews[type];
 }
 
+// ── Image load ────────────────────────────────────────────
 function imgf(file,type){
   if(!file)return;
   var canvas=document.createElement('canvas');
@@ -247,22 +386,31 @@ function imgf(file,type){
     if(h>max){w=Math.round(w*max/h);h=max;}
     canvas.width=w;canvas.height=h;
     ctx.drawImage(img,0,0,w,h);
-    var compressed=canvas.toDataURL('image/jpeg',0.8);
-    showPreview(type,compressed);
-    aiImg(type,compressed.split(',')[1]);
+    var full=canvas.toDataURL('image/jpeg',0.8);
+    // Thumbnail (small)
+    var tc=document.createElement('canvas');
+    var tw=120,th=Math.round(h*120/w);
+    tc.width=tw;tc.height=th;
+    tc.getContext('2d').drawImage(img,0,0,tw,th);
+    previews[type]={full:full,thumb:tc.toDataURL('image/jpeg',0.6)};
+    showPreview(type,full);
+    aiImg(type,full.split(',')[1]);
   };
   img.src=URL.createObjectURL(file);
 }
 
+// ── API ───────────────────────────────────────────────────
 async function api(sys,usr,img){
   var body={model:'claude-sonnet-4-6',max_tokens:1200,system:sys,messages:[{role:'user',content:img?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:img}},{type:'text',text:usr}]:[{type:'text',text:usr}]}]};
   var res=await fetch('/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!res.ok)throw new Error('API '+res.status);
   var d=await res.json();
+  if(d.error)throw new Error(d.error);
   var txt=d.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('').replace(/```json|```/g,'').trim();
   return JSON.parse(txt);
 }
 
+// ── Text check ────────────────────────────────────────────
 async function chk(){
   var food=document.getElementById('fi').value.trim();
   if(!food)return;
@@ -276,22 +424,23 @@ async function chk(){
       'ピーナッツ含有確認：「'+food+'」'
     );
     showTR(el,r);
-    hist.unshift(r);if(hist.length>6)hist.pop();
-    localStorage.setItem('ph',JSON.stringify(hist));
-    showHist();
+    quickHist.unshift(r);if(quickHist.length>6)quickHist.pop();
+    localStorage.setItem('ph',JSON.stringify(quickHist));
+    renderQHist();
+    openSheet(r,'text',null);
   }catch(e){
     el.innerHTML='<div class="rc warning"><p class="rbody">エラー: '+e.message+'</p></div>';
   }
   btn.disabled=false;btn.innerHTML='<i class="ti ti-shield-check"></i>確認';
 }
 
+// ── Image analysis ────────────────────────────────────────
 async function aiImg(type,b64){
   var el=document.getElementById(type==='label'?'lr':type==='menu'?'mr':'dr');
   var cfgs={
     label:{
       sys:'多言語食品ラベル解析AI。JSONのみ：{"food":"商品名","detectedLang":"言語","status":"danger|warning|safe","verdictText":"判定10字","summary":"日本語2文","details":["詳細"],"allergenTerms":["検出語句"]}',
-      usr:'原材料表示を解析してピーナッツ含有を確認してください。',
-      ld:'原材料表示を多言語解析中...'
+      usr:'原材料表示を解析してピーナッツ含有を確認してください。',ld:'原材料表示を多言語解析中...'
     },
     menu:{
       sys:'レストランメニュー解析AI。JSONのみ：{"menuType":"料理ジャンル","detectedLang":"言語","overallRisk":"danger|warning|safe","summary":"2文","items":[{"name":"料理名原文","nameJp":"和訳","status":"danger|warning|safe","reason":"1文"}]}',
@@ -300,8 +449,7 @@ async function aiImg(type,b64){
     },
     dish:{
       sys:'料理視覚解析AI。JSONのみ：{"dishName":"料理名推定","cuisine":"ジャンル","status":"danger|warning|safe","verdictText":"判定10字","summary":"視覚的分析2文","visualClues":["確認要素"],"recommendation":"推奨アクション1文"}',
-      usr:'この料理にピーナッツが含まれているか視覚的に判定してください。',
-      ld:'料理を視覚解析中...'
+      usr:'この料理にピーナッツが含まれているか視覚的に判定してください。',ld:'料理を視覚解析中...'
     }
   };
   var c=cfgs[type];
@@ -309,11 +457,13 @@ async function aiImg(type,b64){
   try{
     var r=await api(c.sys,c.usr,b64);
     if(type==='menu')showMR(el,r);else showIR(el,r,type);
+    openSheet(r,type,previews[type]?previews[type].thumb:null);
   }catch(e){
     el.innerHTML='<div class="rc warning"><p class="rbody">エラー: '+e.message+'</p></div>';
   }
 }
 
+// ── Render results ────────────────────────────────────────
 function showTR(el,r){
   el.innerHTML='<div class="rc '+r.status+'"><div class="vb '+r.status+'">'+si(r.status)+' '+(r.verdictText||bl(r.status))+'</div><div class="rmeta"><span class="rbadge '+r.status+'">'+bl(r.status)+'</span><span class="rfood">'+r.food+'</span>'+(r.detectedLang?'<span class="rlang">'+r.detectedLang+'</span>':'')+'</div><p class="rbody">'+r.summary+'</p>'+(r.details&&r.details.length?'<div class="dsec"><ul>'+r.details.map(function(d){return'<li>'+d+'</li>';}).join('')+'</ul></div>':'')+'</div><div class="disc"><strong>注意：</strong>重篤なアレルギーの場合は必ず原材料表示を直接ご確認ください。</div>';
 }
@@ -331,25 +481,174 @@ function showMR(el,r){
   el.innerHTML='<div class="rc '+s+'"><div class="vb '+s+'">'+si(s)+' '+(s==='danger'?'危険な料理あり':s==='warning'?'注意が必要':'安全なメニュー')+'</div><div class="rmeta"><span class="rbadge '+s+'">'+bl(s)+'</span><span class="rfood">'+(r.menuType||'メニュー')+'</span>'+(r.detectedLang?'<span class="rlang">'+r.detectedLang+'</span>':'')+'</div><p class="rbody">'+r.summary+'</p>'+(sorted.length?'<div class="dsec"><h4>料理別リスク判定</h4><div class="mig">'+sorted.map(function(item){return'<div class="mir"><div class="mist '+item.status+'">'+si(item.status)+'</div><div class="mii"><div class="nm">'+item.name+(item.nameJp&&item.nameJp!==item.name?' <span style="font-size:11px;color:var(--t2)">/ '+item.nameJp+'</span>':'')+'</div><div class="rs">'+item.reason+'</div></div></div>';}).join('')+'</div></div>':'')+'</div><div class="disc"><strong>注意：</strong>同じ料理でも調理法により成分が異なります。スタッフへの確認を推奨します。</div>';
 }
 
-function showHist(){
+// ── Quick history (scan tabs) ─────────────────────────────
+function renderQHist(){
   var el=document.getElementById('th');
-  if(!hist.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="hwrap"><div class="slbl">最近の検索</div>'+hist.map(function(h,i){return'<div class="hi" onclick="reH('+i+')"><div class="dot '+h.status+'"></div><span class="hn">'+h.food+'</span><span class="hm">'+(h.status==='danger'?'危険':h.status==='warning'?'注意':'安全')+'</span></div>';}).join('')+'</div>';
+  if(!quickHist.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="hwrap"><div class="slbl">最近の検索</div>'+quickHist.map(function(h,i){return'<div class="hi" onclick="reH('+i+')"><div class="dot '+h.status+'"></div><span class="hn">'+h.food+'</span><span class="hm">'+(h.status==='danger'?'危険':h.status==='warning'?'注意':'安全')+'</span></div>';}).join('')+'</div>';
 }
-
 function reH(i){
-  showTR(document.getElementById('tr'),hist[i]);
-  document.getElementById('fi').value=hist[i].food;
+  showTR(document.getElementById('tr'),quickHist[i]);
+  document.getElementById('fi').value=quickHist[i].food;
+}
+renderQHist();
+
+// ── Save sheet ────────────────────────────────────────────
+function openSheet(result,type,thumb){
+  var food=result.food||result.dishName||result.menuType||'スキャン結果';
+  var status=result.status||result.overallRisk;
+  pendingRecord={
+    id: Date.now(),
+    food: food,
+    status: status,
+    type: type,
+    timestamp: Date.now(),
+    summary: result.summary||'',
+    allergenTerms: result.allergenTerms||[],
+    thumb: thumb||null,
+    detectedLang: result.detectedLang||''
+  };
+  document.getElementById('sh-preview').textContent=si(status)+' '+food+' — '+bl(status);
+  document.getElementById('sh-loc').value='';
+  document.getElementById('sh-memo').value='';
+  document.getElementById('save-overlay').classList.add('show');
 }
 
-showHist();
+function closeSheet(){
+  document.getElementById('save-overlay').classList.remove('show');
+  pendingRecord=null;
+}
+
+function saveRecord(){
+  if(!pendingRecord)return;
+  pendingRecord.location=document.getElementById('sh-loc').value.trim();
+  pendingRecord.memo=document.getElementById('sh-memo').value.trim();
+  records.unshift(pendingRecord);
+  if(records.length>200)records.pop();
+  localStorage.setItem('records',JSON.stringify(records));
+  closeSheet();
+  // Show brief confirmation
+  var tab=document.getElementById('t-hist');
+  tab.style.color='#16A34A';
+  setTimeout(function(){tab.style.color='';},1200);
+}
+
+// ── History tab ───────────────────────────────────────────
+function setFilter(f){
+  histFilter=f;
+  ['all','danger','warning','safe'].forEach(function(x){
+    document.getElementById('fp-'+x).classList.toggle('on',x===f);
+  });
+  renderHist();
+}
+
+function renderHist(){
+  var q=(document.getElementById('hsearch').value||'').toLowerCase();
+  var filtered=records.filter(function(r){
+    if(histFilter!=='all'&&r.status!==histFilter)return false;
+    if(q&&!(r.food.toLowerCase().includes(q)||(r.location||'').toLowerCase().includes(q)||(r.memo||'').toLowerCase().includes(q)))return false;
+    return true;
+  });
+
+  document.getElementById('hcount').textContent=filtered.length+'件';
+
+  if(!filtered.length){
+    document.getElementById('hlist').innerHTML='<div class="empty-state"><i class="ti ti-history"></i><p>'+(records.length?'条件に一致する記録がありません':'スキャン後に「保存する」を選ぶと<br/>ここに履歴が蓄積されます')+'</p></div>';
+    return;
+  }
+
+  // Group by date
+  var groups={};
+  filtered.forEach(function(r){
+    var d=new Date(r.timestamp);
+    var key=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+    if(!groups[key])groups[key]=[];
+    groups[key].push(r);
+  });
+
+  var html='<div class="export-row"><button class="btn-sm btn-outline" onclick="exportCSV()"><i class="ti ti-file-text" style="font-size:13px"></i> CSV書き出し</button></div>';
+  Object.keys(groups).forEach(function(date){
+    html+='<div style="font-size:11px;font-weight:600;color:var(--t3);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.04em">'+date+'</div>';
+    groups[date].forEach(function(r){
+      var ph=r.thumb?'<img class="hthumb" src="'+r.thumb+'" alt=""/>'
+        :'<div class="hthumb-ph">'+si(r.status)+'</div>';
+      html+='<div class="hcard '+r.status+'" onclick="showDetail(\''+r.id+'\')">'+
+        ph+
+        '<div class="hinfo">'+
+          '<div class="hname">'+r.food+'</div>'+
+          '<div class="hmeta">'+
+            '<span class="hbadge '+r.status+'">'+bl(r.status)+'</span>'+
+            '<span class="htype"><i class="ti '+typeIcon(r.type)+'" style="font-size:10px;vertical-align:-1px"></i> '+typeLabel(r.type)+'</span>'+
+            '<span class="hdate">'+formatDate(r.timestamp)+'</span>'+
+          '</div>'+
+          (r.location?'<div class="hloc" style="margin-top:3px"><i class="ti ti-map-pin"></i>'+r.location+'</div>':'')+
+        '</div>'+
+        '<button class="hdel" onclick="delRecord(event,\''+r.id+'\')"><i class="ti ti-x"></i></button>'+
+      '</div>';
+    });
+  });
+
+  document.getElementById('hlist').innerHTML=html;
+}
+
+function delRecord(e,id){
+  e.stopPropagation();
+  records=records.filter(function(r){return r.id!=id;});
+  localStorage.setItem('records',JSON.stringify(records));
+  renderHist();
+}
+
+function showDetail(id){
+  var r=records.find(function(x){return x.id==id;});
+  if(!r)return;
+  var html='<div class="sheet-handle"></div>'+
+    (r.thumb?'<img class="ds-img" src="'+r.thumb+'"/>':'')+
+    '<div class="vb '+r.status+'" style="margin-bottom:12px">'+si(r.status)+' '+bl(r.status)+'</div>'+
+    '<div class="ds-row"><span class="ds-label">商品名</span><span class="ds-val" style="font-weight:500">'+r.food+'</span></div>'+
+    '<div class="ds-row"><span class="ds-label">種別</span><span class="ds-val">'+typeLabel(r.type)+'</span></div>'+
+    '<div class="ds-row"><span class="ds-label">日時</span><span class="ds-val">'+new Date(r.timestamp).toLocaleString('ja-JP')+'</span></div>'+
+    (r.location?'<div class="ds-row"><span class="ds-label">場所</span><span class="ds-val">'+r.location+'</span></div>':'')+
+    (r.memo?'<div class="ds-row"><span class="ds-label">メモ</span><span class="ds-val">'+r.memo+'</span></div>':'')+
+    (r.summary?'<div class="ds-row"><span class="ds-label">概要</span><span class="ds-val">'+r.summary+'</span></div>':'')+
+    (r.allergenTerms&&r.allergenTerms.length?'<div class="ds-row"><span class="ds-label">検出語句</span><span class="ds-val">'+r.allergenTerms.map(function(t){return'<span class="mtag">'+t+'</span>';}).join(' ')+'</span></div>':'')+
+    (r.detectedLang?'<div class="ds-row"><span class="ds-label">言語</span><span class="ds-val">'+r.detectedLang+'</span></div>':'')+
+    '<div style="margin-top:16px"><button class="btn" style="width:100%;justify-content:center" onclick="closeDetail()">閉じる</button></div>';
+  document.getElementById('detail-content').innerHTML=html;
+  document.getElementById('detail-overlay').classList.add('show');
+}
+
+function closeDetail(){
+  document.getElementById('detail-overlay').classList.remove('show');
+}
+
+// ── CSV Export ────────────────────────────────────────────
+function exportCSV(){
+  var header=['日時','商品名','判定','種別','場所','メモ','概要','検出語句'];
+  var rows=records.map(function(r){
+    return [
+      new Date(r.timestamp).toLocaleString('ja-JP'),
+      r.food,
+      bl(r.status),
+      typeLabel(r.type),
+      r.location||'',
+      r.memo||'',
+      r.summary||'',
+      (r.allergenTerms||[]).join('/')
+    ].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');
+  });
+  var csv='\uFEFF'+header.join(',')+'\n'+rows.join('\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='peanut-checker-履歴.csv';a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 <script>
 if('serviceWorker' in navigator){
-  // Unregister all old service workers first, then register fresh
   navigator.serviceWorker.getRegistrations().then(function(regs){
     Promise.all(regs.map(function(r){return r.unregister();})).then(function(){
-      navigator.serviceWorker.register('sw.js?v=2');
+      navigator.serviceWorker.register('sw.js?v=6');
     });
   });
 }
